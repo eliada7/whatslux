@@ -16,9 +16,15 @@ export interface VocabularyEntry {
   /** den / de / d' / eng … as it appears before this word */
   article?: string
   plural?: string
+  /** Noun gender from LOD: M, F, N (or combinations) */
+  gender?: string
   translations: PartialLocalized
   exampleLu?: string
   exampleTranslations?: PartialLocalized
+  /** Audio of exampleLu when the sentence comes from a recorded LOD example */
+  exampleAudio?: { aac: string; ogg: string }
+  /** Where exampleLu comes from: the teacher, or LOD (untranslated) */
+  exampleSource?: 'teacher' | 'lod'
   category: VocabularyCategory
   level: CEFRLevel
   lod: LodVerification

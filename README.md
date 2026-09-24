@@ -15,7 +15,8 @@ with a strong focus on Sproochentest preparation and on **never mixing Luxembour
 | Content + publishing gate | `packages/content` | ✅ validator checks against LOD; 7/9 seed words verified |
 | REST API (Express) | `backend` | ✅ vocabulary, SRS, LOD link, AI routes + tests |
 | Database schema (Prisma) | `backend/prisma/schema.prisma` | ✅ valid, not yet migrated |
-| Mobile app (Expo), web app (Next.js), auth, payments, STT/TTS | — | ⏳ next phases |
+| Learner web app (Next.js): vocabulary flashcards with LOD audio, SM-2 review, RTL Arabic | `apps/web` | ✅ `/vocabulary` |
+| Mobile app (Expo), auth, payments, speech-to-text | — | ⏳ next phases |
 
 ## Content integrity rules (enforced in code)
 
@@ -33,8 +34,15 @@ pnpm build            # shared + ai + lod
 pnpm lod:import path/to/260727-new-lod-art.zip   # dictionary data (git-ignored)
 pnpm test             # unit tests + content gate
 cp .env.example .env  # add ANTHROPIC_API_KEY
-pnpm --filter @whatslux/backend dev
+pnpm --filter @whatslux/backend dev   # API on :4000
+pnpm --filter @whatslux/web dev       # app on :3000 → /vocabulary
 ```
+
+<p>
+  <img src="docs/screenshots/1-card-front.png" width="200" alt="Card front">
+  <img src="docs/screenshots/2-card-back-den.png" width="200" alt="Card back">
+  <img src="docs/screenshots/5-dark-mode.png" width="200" alt="Dark mode">
+</p>
 
 ## API (so far)
 

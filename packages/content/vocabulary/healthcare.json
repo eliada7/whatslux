@@ -36,7 +36,14 @@
     },
     "reviewNote": "Replaces 'Médecin' from the spec, which is not in LOD.",
     "article": "den",
-    "plural": "Dokteren"
+    "plural": "Dokteren",
+    "exampleLu": "An esou Fäll soll een direkt den Dokter ruffen",
+    "exampleAudio": {
+      "aac": "https://lod.lu/uploads/examples/AAC/df/df8b09797e2df943d296927f56941442.m4a",
+      "ogg": "https://lod.lu/uploads/examples/OGG/df/df8b09797e2df943d296927f56941442.ogg"
+    },
+    "exampleSource": "lod",
+    "gender": "M"
   },
   {
     "id": "health-ordonnance",
@@ -59,6 +66,13 @@
       "verifiedAt": "2026-09-24"
     },
     "article": "d'",
-    "plural": "Ordonnancen"
+    "plural": "Ordonnancen",
+    "exampleLu": "Dat Medikament kriss de net ouni Ordonnance",
+    "exampleAudio": {
+      "aac": "https://lod.lu/uploads/examples/AAC/94/94336b114904597b1fc20ebf32364b57.m4a",
+      "ogg": "https://lod.lu/uploads/examples/OGG/94/94336b114904597b1fc20ebf32364b57.ogg"
+    },
+    "exampleSource": "lod",
+    "gender": "F"
   }
 ]

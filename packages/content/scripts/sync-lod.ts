@@ -11,8 +11,29 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { LodIndex, definiteArticle, lodArticleUrl, lodWordAudio } from '@whatslux/lod'
+import { LodIndex, definiteArticle, isLearnerSafe, lodArticleUrl, lodExampleAudio, lodWordAudio, type LodEntry } from '@whatslux/lod'
 import type { VocabularyEntry } from '@whatslux/shared'
+
+/**
+ * Default example: a short, recorded, neutral-register sentence from LOD's first
+ * learner-safe meaning that contains the headword in dictionary form. A teacher-written example (exampleSource: 'teacher') is never replaced.
+ */
+function pickExample(e: LodEntry) {
+  return e.meanings
+    .filter((m) => isLearnerSafe(m) && !m.register?.length && !m.secondaryHeadword)
+    .flatMap((m) => m.examples)
+    .filter(
+      (x) =>
+        x.id &&
+        !x.register?.length &&
+        x.text.length <= 70 &&
+        !x.text.includes('(') &&
+        // the headword appears in its dictionary form, so the learner recognises it
+        x.text.toLowerCase().split(/[\s']+/).map((w) => w.replace(/[^\p{L}\p{M}-]/gu, '').normalize('NFC')).includes(e.lemma.toLowerCase()),
+    )
+    .sort((a, b) => a.text.length - b.text.length)
+    .find((x) => x.text.split(' ').length >= 4)
+}
 
 const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'vocabulary')
 const lod = await LodIndex.load()
@@ -47,6 +68,7 @@ for (const file of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
       continue
     }
     if (article) v.article = article
+    if (e.gender) v.gender = e.gender
     const plural = e.plural?.[0]?.form
     if (plural) v.plural = plural
     v.lod = {
@@ -57,9 +79,21 @@ for (const file of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
       verifiedBy: `LOD open data (${release})`,
       verifiedAt,
     }
+    if (v.exampleSource !== 'teacher') {
+      const ex = pickExample(e)
+      if (ex?.id) {
+        v.exampleLu = ex.text.charAt(0).toUpperCase() + ex.text.slice(1)
+        v.exampleAudio = lodExampleAudio(ex.id)
+        v.exampleSource = 'lod'
+      } else {
+        delete v.exampleLu
+        delete v.exampleAudio
+        delete v.exampleSource
+      }
+    }
     const fr = e.meanings.flatMap((m) => m.translations.fr ?? []).slice(0, 3).join(', ')
     const en = e.meanings.flatMap((m) => m.translations.en ?? []).slice(0, 3).join(', ')
-    console.log(`✓ ${v.article ? (v.article.endsWith("'") ? v.article : v.article + ' ') : ''}${v.word}${plural ? ` (pl. ${plural})` : ''}  ar: ${v.translations.ar ?? '—'}  |  LOD fr: ${fr}  en: ${en}`)
+    console.log(`✓ ${v.article ? (v.article.endsWith("'") ? v.article : v.article + ' ') : ''}${v.word}${plural ? ` (pl. ${plural})` : ''}  ar: ${v.translations.ar ?? '—'}  |  LOD fr: ${fr}  en: ${en}${v.exampleLu ? `\n    ↳ ${v.exampleLu}` : ''}`)
   }
   writeFileSync(path.join(dir, file), JSON.stringify(entries, null, 2) + '\n')
 }

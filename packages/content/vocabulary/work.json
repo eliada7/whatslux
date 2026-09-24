@@ -34,7 +34,14 @@
       "verifiedBy": "LOD open data (260727)",
       "verifiedAt": "2026-09-24"
     },
-    "article": "de"
+    "article": "de",
+    "exampleLu": "Den Aarbechtslosen huet Chômage ugefrot",
+    "exampleAudio": {
+      "aac": "https://lod.lu/uploads/examples/AAC/68/68fccd8a4496b51f4840e7c9c198852f.m4a",
+      "ogg": "https://lod.lu/uploads/examples/OGG/68/68fccd8a4496b51f4840e7c9c198852f.ogg"
+    },
+    "exampleSource": "lod",
+    "gender": "M"
   },
   {
     "id": "work-kontrakt",
@@ -58,7 +65,14 @@
     },
     "reviewNote": "Replaces 'Contrat' from the spec, which is not in LOD. Work contract: Aarbechtskontrakt (AARBECHTSKONTRAKT1).",
     "article": "de",
-    "plural": "Kontrakten"
+    "plural": "Kontrakten",
+    "exampleLu": "Mir hunn de Kontrakt haut ënnerschriwwen a fortgeschéckt",
+    "exampleAudio": {
+      "aac": "https://lod.lu/uploads/examples/AAC/da/da26593e0789d99f9b33428bd0e96abd.m4a",
+      "ogg": "https://lod.lu/uploads/examples/OGG/da/da26593e0789d99f9b33428bd0e96abd.ogg"
+    },
+    "exampleSource": "lod",
+    "gender": "M"
   },
   {
     "id": "work-salaire",
@@ -82,7 +96,8 @@
     },
     "reviewNote": "LOD also has d'Pai (PAI1) and de Loun (LOUN1).",
     "article": "de",
-    "plural": "Salairen"
+    "plural": "Salairen",
+    "gender": "M"
   },
   {
     "id": "work-interview",
@@ -106,7 +121,14 @@
     },
     "reviewNote": "Replaces 'Intervue' from the spec, which is not in LOD. LOD also gives Entretien (ENTRETIEN1) for a job interview.",
     "article": "den",
-    "plural": "Interviewen"
+    "plural": "Interviewen",
+    "exampleLu": "Den Trainer wollt nom Match keen Interview ginn",
+    "exampleAudio": {
+      "aac": "https://lod.lu/uploads/examples/AAC/15/15751e51321762ae67c981adc46115e3.m4a",
+      "ogg": "https://lod.lu/uploads/examples/OGG/15/15751e51321762ae67c981adc46115e3.ogg"
+    },
+    "exampleSource": "lod",
+    "gender": "M"
   },
   {
     "id": "work-conge",
@@ -130,6 +152,13 @@
     },
     "reviewNote": "Replaces 'Urlaub' from the spec, which is not in LOD (German). School/summer holidays: d'Vakanz (VAKANZ1).",
     "article": "de",
-    "plural": "Congéen"
+    "plural": "Congéen",
+    "exampleLu": "Mäin Dokter ass den Ament am Congé",
+    "exampleAudio": {
+      "aac": "https://lod.lu/uploads/examples/AAC/6a/6a4e98a3762035d23f4f613cd7d80897.m4a",
+      "ogg": "https://lod.lu/uploads/examples/OGG/6a/6a4e98a3762035d23f4f613cd7d80897.ogg"
+    },
+    "exampleSource": "lod",
+    "gender": "M"
   }
 ]
