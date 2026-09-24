@@ -5,8 +5,17 @@
   "type": "module",
   "scripts": {
     "validate": "tsx scripts/validate.ts",
-    "test": "tsx scripts/validate.ts"
+    "test": "tsx scripts/validate.ts",
+    "sync-lod": "tsx scripts/sync-lod.ts"
   },
-  "dependencies": { "@whatslux/shared": "workspace:*", "@whatslux/ai": "workspace:*" },
-  "devDependencies": { "tsx": "^4.20.0", "typescript": "^5.8.0", "@types/node": "^22.0.0" }
+  "dependencies": {
+    "@whatslux/shared": "workspace:*",
+    "@whatslux/ai": "workspace:*",
+    "@whatslux/lod": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0"
+  }
 }

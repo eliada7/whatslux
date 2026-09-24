@@ -1,17 +1,33 @@
 import express, { type ErrorRequestHandler } from 'express'
 import * as ai from '@whatslux/ai'
-import { UI_LANGUAGES, calculateNextReview, lodSearchUrl, mapRatingToQuality, type VocabularyEntry } from '@whatslux/shared'
+import { LodIndex, definiteArticle, isLearnerSafe, lodArticleUrl, lodExampleAudio, lodWordAudio, type LodEntry } from '@whatslux/lod'
+import { UI_LANGUAGES, calculateNextReview, mapRatingToQuality, type VocabularyEntry } from '@whatslux/shared'
 import { z } from 'zod'
 import { loadVocabulary, publishedVocabulary } from './services/vocabulary.service.js'
 
 export interface AppDeps {
   ai: Pick<typeof ai, 'explainGrammarError' | 'evaluateSpeaking' | 'continueConversation'>
   vocabulary: () => VocabularyEntry[]
+  /** Resolves to undefined when the LOD dataset has not been imported. */
+  lod: () => Promise<LodIndex | undefined>
 }
+
+let lodCache: Promise<LodIndex | undefined> | undefined
+const loadLod = () => (lodCache ??= LodIndex.exists() ? LodIndex.load() : Promise.resolve(undefined))
+
+const lodSummary = (e: LodEntry) => ({
+  id: e.id,
+  lemma: e.lemma,
+  pos: e.pos,
+  gender: e.gender,
+  article: e.pos === 'SUBST' ? definiteArticle(e.gender, e.lemma) : undefined,
+  url: lodArticleUrl(e.id),
+  audio: lodWordAudio(e.id),
+})
 
 const lang = z.enum(UI_LANGUAGES)
 
-export function createApp(deps: AppDeps = { ai, vocabulary: loadVocabulary }): express.Express {
+export function createApp(deps: AppDeps = { ai, vocabulary: loadVocabulary, lod: loadLod }): express.Express {
   const app = express()
   app.use(express.json({ limit: '100kb' }))
   const v1 = express.Router()
@@ -41,11 +57,35 @@ export function createApp(deps: AppDeps = { ai, vocabulary: loadVocabulary }): e
   })
 
   // ── LOD ──────────────────────────────────────────────────────
-  // lod.lu has no documented public API here yet; this returns the lookup link
-  // for a human reviewer instead of pretending to verify automatically.
-  v1.get('/lod/link', (req, res) => {
-    const { word } = z.object({ word: z.string().min(1).max(100) }).parse(req.query)
-    res.json({ word, url: lodSearchUrl(word) })
+  // Served from the imported LOD open-data dataset (pnpm lod:import).
+  v1.get('/lod/search', async (req, res) => {
+    const { q, exact } = z.object({ q: z.string().min(1).max(100), exact: z.enum(['true', 'false']).optional() }).parse(req.query)
+    const lod = await deps.lod()
+    if (!lod) {
+      res.status(503).json({ error: 'LOD dataset not imported' })
+      return
+    }
+    const hits = exact === 'true' ? lod.byLemma(q) : lod.search(q)
+    res.json({ items: hits.map(lodSummary), release: lod.meta?.source })
+  })
+
+  v1.get('/lod/entry/:id', async (req, res) => {
+    const lod = await deps.lod()
+    if (!lod) {
+      res.status(503).json({ error: 'LOD dataset not imported' })
+      return
+    }
+    const e = lod.byId(req.params.id)
+    if (!e) {
+      res.status(404).json({ error: 'Not found' })
+      return
+    }
+    // Crude, pejorative and vulgar meanings/examples are withheld from learners.
+    const meanings = e.meanings.filter(isLearnerSafe).map((m) => ({
+      ...m,
+      examples: m.examples.filter(isLearnerSafe).map((x) => ({ ...x, audio: x.id ? lodExampleAudio(x.id) : undefined })),
+    }))
+    res.json({ ...e, ...lodSummary(e), meanings })
   })
 
   // ── AI ───────────────────────────────────────────────────────

@@ -914,7 +914,9 @@ export async function safeAICall<T>(
 // backend/src/services/lod.service.ts
 
 /*
-=== LOD OFFICIAL DATA ACCESS — CONFIRMED WORKING ===
+=== LOD OFFICIAL DATA ACCESS ===
+⚠️ Several details below were corrected after checking the real data: see docs/LOD.md
+(API paths are /api/{locale}/…, audio ids are lowercase, there are no Arabic translations).
 
 LOD (Lëtzebuerger Online Dictionnaire) provides THREE access methods:
 

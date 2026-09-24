@@ -1,5 +1,6 @@
 import request from 'supertest'
 import { describe, expect, it, vi } from 'vitest'
+import { LodIndex } from '@whatslux/lod'
 import type { VocabularyEntry } from '@whatslux/shared'
 import { createApp, type AppDeps } from './app.js'
 import { loadVocabulary } from './services/vocabulary.service.js'
@@ -17,7 +18,20 @@ function makeApp(overrides: Partial<AppDeps['ai']> = {}) {
     continueConversation: vi.fn(),
     ...overrides,
   } as unknown as AppDeps['ai']
-  return { app: createApp({ ai, vocabulary: () => [verified, unverified] }), ai }
+  const lod = new LodIndex([
+    { id: 'DOKTER1', lemma: 'Dokter', pos: 'SUBST', gender: 'M', meanings: [] },
+    {
+      id: 'WEINI1', lemma: 'wéini', pos: 'ADV',
+      meanings: [{
+        id: 'WEINI1UNI1', translations: { en: ['when'] },
+        examples: [
+          { id: 'abc123', text: 'wéini kënns du?' },
+          { text: 'rude example', register: ['VULG'] },
+        ],
+      }],
+    },
+  ])
+  return { app: createApp({ ai, vocabulary: () => [verified, unverified], lod: async () => lod }), ai }
 }
 
 describe('API', () => {
@@ -49,9 +63,23 @@ describe('API', () => {
     expect(explainGrammarError).toHaveBeenCalledWith(body)
   })
 
-  it('returns a LOD lookup link', async () => {
-    const res = await request(makeApp().app).get('/api/v1/lod/link').query({ word: 'Moien' })
-    expect(res.body.url).toContain('lod.lu')
+  it('searches LOD with article and audio', async () => {
+    const res = await request(makeApp().app).get('/api/v1/lod/search').query({ q: 'dok' })
+    expect(res.body.items[0]).toMatchObject({
+      id: 'DOKTER1',
+      article: 'den',
+      audio: { aac: 'https://lod.lu/uploads/AAC/dokter1.m4a' },
+    })
+  })
+
+  it('returns a LOD entry, 404 for unknown ids', async () => {
+    const { app } = makeApp()
+    const res = await request(app).get('/api/v1/lod/entry/WEINI1')
+    expect(res.body.lemma).toBe('wéini')
+    expect(res.body.meanings[0].examples).toEqual([
+      { id: 'abc123', text: 'wéini kënns du?', audio: { aac: 'https://lod.lu/uploads/examples/AAC/ab/abc123.m4a', ogg: 'https://lod.lu/uploads/examples/OGG/ab/abc123.ogg' } },
+    ])
+    expect((await request(app).get('/api/v1/lod/entry/NOPE1')).status).toBe(404)
   })
 
   it('loads the content package vocabulary', () => {

@@ -8,9 +8,13 @@ describe('detectGermanInLuxembourgish', () => {
   })
 
   it('does not flag correct Luxembourgish', () => {
-    for (const s of ["Ech hunn geschafft", "D'Buch ass gutt", 'Ech ginn heem', 'Ech wunnen an der Stad', 'Äddi, bis geschwënn']) {
+    for (const s of ["Ech hunn geschafft", "D'Buch ass gutt", 'Ech ginn heem', 'Ech wunnen an der Stad', 'Äddi, bis geschwënn', 'ech hat keng Zäit', "et huet eng Weil gedauert"]) {
       expect(detectGermanInLuxembourgish(s).hasGermanWords, s).toBe(false)
     }
+  })
+
+  it('flags lowercase weil but not the noun Weil', () => {
+    expect(detectGermanInLuxembourgish('ech kommen net, weil ech krank sinn').suspects.map((s) => s.word)).toEqual(['weil'])
   })
 
   it('is not fooled by German words inside longer Luxembourgish words', () => {

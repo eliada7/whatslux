@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lod>
+  <entry id="DOKTER1">
+    <lemma>Dokter</lemma>
+    <ipa>ˈdoktɐ</ipa>
+    <microStructure>
+      <partOfSpeech gen="M">SUBST</partOfSpeech>
+      <inflection type="plural">
+        <form nRuleForm="Doktere">Dokteren</form>
+      </inflection>
+      <grammaticalUnit>
+        <meaning id="DOKTER1UNI1">
+          <number>1</number>
+          <targetLanguage lang="de"><translation>Arzt</translation></targetLanguage>
+          <targetLanguage lang="fr"><translation>médecin</translation></targetLanguage>
+          <targetLanguage lang="en"><translation>doctor</translation></targetLanguage>
+          <examples count="2+">
+            <example id="9c09eb87e688a5f4fc2e719e202fc6a7">
+              <text>
+                <word>ech</word><word>hunn</word><word>d'</word><word>nächst</word><word>Woch</word>
+                <word>e</word><word>Rendez-vous</word><word>beim</word><inflectedHeadword>Dokter</inflectedHeadword>
+              </text>
+            </example>
+            <example>
+              <text><attribute>EGS</attribute><word>hal</word><word>däin</word><word>Zil</word><inflectedHeadword>A</inflectedHeadword><word>!</word></text>
+              <gloss><word>sief</word><word>der</word><word>bewosst</word></gloss>
+            </example>
+          </examples>
+        </meaning>
+      </grammaticalUnit>
+    </microStructure>
+  </entry>
+  <entry id="SCHAFFEN3">
+    <lemma>schaffen</lemma>
+    <microStructure>
+      <partOfSpeech>VRB</partOfSpeech>
+      <auxiliaryVerb>hunn</auxiliaryVerb>
+      <pastParticiple>geschafft</pastParticiple>
+      <grammaticalUnit>
+        <meaning id="SCHAFFEN3UNI1">
+          <targetLanguage lang="en"><translation>to work</translation></targetLanguage>
+        </meaning>
+      </grammaticalUnit>
+    </microStructure>
+  </entry>
+  <entry id="DASS1">
+    <lemma>dass</lemma>
+    <microStructure>
+      <partOfSpeech>CONJ</partOfSpeech>
+      <internalLink idRef="DATT1" relation="Variant">datt</internalLink>
+    </microStructure>
+  </entry>
+  <entry id="WANN2">
+    <lemma>wann</lemma>
+    <microStructure><partOfSpeech>CONJ</partOfSpeech></microStructure>
+  </entry>
+  <entry id="WANN3">
+    <lemma>Wann</lemma>
+    <microStructure><partOfSpeech gen="F">SUBST</partOfSpeech></microStructure>
+  </entry>
+</lod>

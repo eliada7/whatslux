@@ -3,58 +3,133 @@
     "id": "work-adem",
     "word": "ADEM",
     "article": "d'",
-    "translations": { "ar": "وكالة التشغيل الوطنية", "en": "national employment agency" },
+    "translations": {
+      "ar": "وكالة التشغيل الوطنية",
+      "en": "national employment agency"
+    },
     "category": "WORK",
     "level": "A2",
-    "lod": { "verified": false },
-    "reviewNote": "Acronym — check whether LOD lists it and which article is used."
+    "lod": {
+      "verified": false
+    },
+    "reviewNote": "Institution acronym — not a LOD headword. Needs a manual check of the article."
   },
   {
     "id": "work-chomage",
     "word": "Chômage",
-    "article": "de",
-    "translations": { "ar": "البطالة / إعانة البطالة", "en": "unemployment (benefit)" },
+    "translations": {
+      "ar": "البطالة / إعانة البطالة",
+      "en": "unemployment (benefit)"
+    },
     "category": "WORK",
     "level": "A2",
-    "lod": { "verified": false }
+    "lod": {
+      "verified": true,
+      "entryId": "CHOMAGE1",
+      "url": "https://lod.lu/artikel/CHOMAGE1",
+      "audio": {
+        "aac": "https://lod.lu/uploads/AAC/chomage1.m4a",
+        "ogg": "https://lod.lu/uploads/OGG/chomage1.ogg"
+      },
+      "verifiedBy": "LOD open data (260727)",
+      "verifiedAt": "2026-09-24"
+    },
+    "article": "de"
   },
   {
-    "id": "work-contrat",
-    "word": "Contrat",
-    "article": "de",
-    "translations": { "ar": "العقد", "en": "contract" },
+    "id": "work-kontrakt",
+    "word": "Kontrakt",
+    "translations": {
+      "ar": "العقد",
+      "en": "contract"
+    },
     "category": "WORK",
     "level": "A2",
-    "lod": { "verified": false }
+    "lod": {
+      "verified": true,
+      "entryId": "KONTRAKT1",
+      "url": "https://lod.lu/artikel/KONTRAKT1",
+      "audio": {
+        "aac": "https://lod.lu/uploads/AAC/kontrakt1.m4a",
+        "ogg": "https://lod.lu/uploads/OGG/kontrakt1.ogg"
+      },
+      "verifiedBy": "LOD open data (260727)",
+      "verifiedAt": "2026-09-24"
+    },
+    "reviewNote": "Replaces 'Contrat' from the spec, which is not in LOD. Work contract: Aarbechtskontrakt (AARBECHTSKONTRAKT1).",
+    "article": "de",
+    "plural": "Kontrakten"
   },
   {
     "id": "work-salaire",
     "word": "Salaire",
-    "article": "de",
-    "translations": { "ar": "الراتب", "en": "salary" },
+    "translations": {
+      "ar": "الراتب",
+      "en": "salary"
+    },
     "category": "WORK",
     "level": "A2",
-    "lod": { "verified": false },
-    "reviewNote": "Check whether Pai / Loun should be taught alongside or instead."
+    "lod": {
+      "verified": true,
+      "entryId": "SALAIRE1",
+      "url": "https://lod.lu/artikel/SALAIRE1",
+      "audio": {
+        "aac": "https://lod.lu/uploads/AAC/salaire1.m4a",
+        "ogg": "https://lod.lu/uploads/OGG/salaire1.ogg"
+      },
+      "verifiedBy": "LOD open data (260727)",
+      "verifiedAt": "2026-09-24"
+    },
+    "reviewNote": "LOD also has d'Pai (PAI1) and de Loun (LOUN1).",
+    "article": "de",
+    "plural": "Salairen"
   },
   {
     "id": "work-interview",
-    "word": "Intervue",
-    "article": "d'",
-    "translations": { "ar": "المقابلة الوظيفية", "en": "job interview" },
+    "word": "Interview",
+    "translations": {
+      "ar": "المقابلة (الوظيفية)",
+      "en": "(job) interview"
+    },
     "category": "WORK",
     "level": "A2",
-    "lod": { "verified": false },
-    "reviewNote": "Spelling and article from the spec are doubtful — confirm the standard word for 'job interview' on LOD."
+    "lod": {
+      "verified": true,
+      "entryId": "INTERVIEW1",
+      "url": "https://lod.lu/artikel/INTERVIEW1",
+      "audio": {
+        "aac": "https://lod.lu/uploads/AAC/interview1.m4a",
+        "ogg": "https://lod.lu/uploads/OGG/interview1.ogg"
+      },
+      "verifiedBy": "LOD open data (260727)",
+      "verifiedAt": "2026-09-24"
+    },
+    "reviewNote": "Replaces 'Intervue' from the spec, which is not in LOD. LOD also gives Entretien (ENTRETIEN1) for a job interview.",
+    "article": "den",
+    "plural": "Interviewen"
   },
   {
-    "id": "work-urlaub",
-    "word": "Urlaub",
-    "article": "den",
-    "translations": { "ar": "الإجازة السنوية", "en": "annual leave" },
+    "id": "work-conge",
+    "word": "Congé",
+    "translations": {
+      "ar": "الإجازة (من العمل)",
+      "en": "time off, leave"
+    },
     "category": "WORK",
     "level": "A2",
-    "lod": { "verified": false },
-    "reviewNote": "Looks German. Check whether Congé / Vakanz is the word to teach."
+    "lod": {
+      "verified": true,
+      "entryId": "CONGE1",
+      "url": "https://lod.lu/artikel/CONGE1",
+      "audio": {
+        "aac": "https://lod.lu/uploads/AAC/conge1.m4a",
+        "ogg": "https://lod.lu/uploads/OGG/conge1.ogg"
+      },
+      "verifiedBy": "LOD open data (260727)",
+      "verifiedAt": "2026-09-24"
+    },
+    "reviewNote": "Replaces 'Urlaub' from the spec, which is not in LOD (German). School/summer holidays: d'Vakanz (VAKANZ1).",
+    "article": "de",
+    "plural": "Congéen"
   }
 ]

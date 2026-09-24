@@ -6,7 +6,8 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "validate:content": "pnpm --filter @whatslux/content validate"
+    "validate:content": "pnpm --filter @whatslux/content validate",
+    "lod:import": "pnpm --filter @whatslux/lod run import-data"
   },
   "devDependencies": {
     "turbo": "^2.5.0",

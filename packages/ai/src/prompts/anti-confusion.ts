@@ -1,19 +1,19 @@
 /**
  * Luxembourgish ≠ German.
  *
- * Every pair below is limited to high-confidence, basic forms. Words that exist
- * in BOTH languages (e.g. "der" — Luxembourgish dative article as in "an der
- * Stad", "Haus", "kommen", "bis") are deliberately NOT listed, so the detector
- * does not flag correct Luxembourgish.
+ * Only forms that are NOT Luxembourgish are listed. The content validator checks
+ * this list against every LOD lemma, plural, participle and example word, so a
+ * valid Luxembourgish form can never be flagged. Removed after that check:
+ * "hat" (ech hat = I had), "dass" (LOD variant of datt), "der" (an der Stad).
+ * `caseSensitive` forms are only flagged in that exact case ("Weil" = a while).
  */
-export const GERMAN_ONLY_FORMS: ReadonlyArray<{ de: string; lu: string }> = [
+export const GERMAN_ONLY_FORMS: ReadonlyArray<{ de: string; lu: string; caseSensitive?: boolean }> = [
   { de: 'ich', lu: 'ech' },
   { de: 'ist', lu: 'ass' },
   { de: 'sind', lu: 'sinn' },
   { de: 'bin', lu: 'sinn' },
   { de: 'habe', lu: 'hunn' },
   { de: 'haben', lu: 'hunn' },
-  { de: 'hat', lu: 'huet' },
   { de: 'gehen', lu: 'goen' },
   { de: 'gehe', lu: 'ginn' },
   { de: 'nicht', lu: 'net' },
@@ -21,8 +21,7 @@ export const GERMAN_ONLY_FORMS: ReadonlyArray<{ de: string; lu: string }> = [
   { de: 'keine', lu: 'keng' },
   { de: 'und', lu: 'an' },
   { de: 'aber', lu: 'awer / mä' },
-  { de: 'dass', lu: 'datt' },
-  { de: 'weil', lu: 'well' },
+  { de: 'weil', lu: 'well', caseSensitive: true },
   { de: 'die', lu: "d'" },
   { de: 'das', lu: "d' / dat" },
   { de: 'ein', lu: 'en / e' },
@@ -58,7 +57,7 @@ export interface GermanSuspect {
   luxembourgish: string
 }
 
-const LOOKUP = new Map(GERMAN_ONLY_FORMS.map((p) => [p.de.toLowerCase(), p.lu]))
+const LOOKUP = new Map(GERMAN_ONLY_FORMS.map((p) => [p.de.toLowerCase(), p]))
 
 /** Scans text that is supposed to be Luxembourgish for German-only forms. */
 export function detectGermanInLuxembourgish(text: string): {
@@ -69,8 +68,9 @@ export function detectGermanInLuxembourgish(text: string): {
   // Letters incl. Luxembourgish diacritics; apostrophes split d'Buch → d / Buch
   const wordRe = /[A-Za-zÀ-ÖØ-öø-ÿ]+/g
   for (const m of text.matchAll(wordRe)) {
-    const lu = LOOKUP.get(m[0].toLowerCase())
-    if (lu) suspects.push({ word: m[0], index: m.index ?? 0, luxembourgish: lu })
+    const form = LOOKUP.get(m[0].toLowerCase())
+    if (form && (!form.caseSensitive || m[0] === form.de))
+      suspects.push({ word: m[0], index: m.index ?? 0, luxembourgish: form.lu })
   }
   return { hasGermanWords: suspects.length > 0, suspects }
 }

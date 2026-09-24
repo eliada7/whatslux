@@ -11,7 +11,8 @@ with a strong focus on Sproochentest preparation and on **never mixing Luxembour
 |---|---|---|
 | Shared types, constants, SM-2 spaced repetition | `packages/shared` | ✅ built + tested |
 | LU≠DE guard, German-leak detector, Claude services | `packages/ai` | ✅ built + tested (detector); services need an API key to run |
-| Content + publishing gate | `packages/content` | ✅ validator; vocabulary seeded, **0 words LOD-verified yet** |
+| LOD dictionary (open data, CC0): import, lookup, n-rule, audio | `packages/lod` | ✅ 33,941 entries; see [`docs/LOD.md`](docs/LOD.md) |
+| Content + publishing gate | `packages/content` | ✅ validator checks against LOD; 7/9 seed words verified |
 | REST API (Express) | `backend` | ✅ vocabulary, SRS, LOD link, AI routes + tests |
 | Database schema (Prisma) | `backend/prisma/schema.prisma` | ✅ valid, not yet migrated |
 | Mobile app (Expo), web app (Next.js), auth, payments, STT/TTS | — | ⏳ next phases |
@@ -28,7 +29,8 @@ with a strong focus on Sproochentest preparation and on **never mixing Luxembour
 
 ```bash
 pnpm install
-pnpm build            # shared + ai
+pnpm build            # shared + ai + lod
+pnpm lod:import path/to/260727-new-lod-art.zip   # dictionary data (git-ignored)
 pnpm test             # unit tests + content gate
 cp .env.example .env  # add ANTHROPIC_API_KEY
 pnpm --filter @whatslux/backend dev
@@ -40,7 +42,8 @@ pnpm --filter @whatslux/backend dev
 |---|---|---|
 | GET | `/api/v1/vocabulary?category=&level=` | LOD-verified words only |
 | POST | `/api/v1/vocabulary/review/rate` | one SM-2 step (`AGAIN/HARD/OK/EASY`) |
-| GET | `/api/v1/lod/link?word=` | LOD lookup link for a reviewer |
+| GET | `/api/v1/lod/search?q=&exact=` | LOD lookup with article + audio |
+| GET | `/api/v1/lod/entry/:id` | LOD entry, learner-safe examples with audio |
 | POST | `/api/v1/ai/grammar-explain` | explain a mistake in the learner's language |
 | POST | `/api/v1/ai/evaluate-speaking` | score a transcribed answer (A2/B1) |
 | POST | `/api/v1/ai/conversation/continue` | role-play turn (commune office configured) |

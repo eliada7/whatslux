@@ -3,28 +3,62 @@
     "id": "health-cns",
     "word": "CNS",
     "article": "d'",
-    "translations": { "ar": "صندوق التأمين الصحي الوطني", "en": "national health insurance fund" },
+    "translations": {
+      "ar": "صندوق التأمين الصحي الوطني",
+      "en": "national health insurance fund"
+    },
     "category": "HEALTHCARE",
     "level": "A2",
-    "lod": { "verified": false }
+    "lod": {
+      "verified": false
+    },
+    "reviewNote": "Institution acronym — not a LOD headword. Needs a manual check of the article."
   },
   {
     "id": "health-dokter",
     "word": "Dokter",
-    "article": "den",
-    "translations": { "ar": "الطبيب", "en": "doctor" },
+    "translations": {
+      "ar": "الطبيب",
+      "en": "doctor"
+    },
     "category": "HEALTHCARE",
     "level": "A1",
-    "lod": { "verified": false },
-    "reviewNote": "Spec listed 'de Médecin'. Dokter is the everyday word — confirm both on LOD."
+    "lod": {
+      "verified": true,
+      "entryId": "DOKTER1",
+      "url": "https://lod.lu/artikel/DOKTER1",
+      "audio": {
+        "aac": "https://lod.lu/uploads/AAC/dokter1.m4a",
+        "ogg": "https://lod.lu/uploads/OGG/dokter1.ogg"
+      },
+      "verifiedBy": "LOD open data (260727)",
+      "verifiedAt": "2026-09-24"
+    },
+    "reviewNote": "Replaces 'Médecin' from the spec, which is not in LOD.",
+    "article": "den",
+    "plural": "Dokteren"
   },
   {
     "id": "health-ordonnance",
     "word": "Ordonnance",
-    "article": "d'",
-    "translations": { "ar": "الوصفة الطبية", "en": "prescription" },
+    "translations": {
+      "ar": "الوصفة الطبية",
+      "en": "prescription"
+    },
     "category": "HEALTHCARE",
     "level": "A2",
-    "lod": { "verified": false }
+    "lod": {
+      "verified": true,
+      "entryId": "ORDONNANCE1",
+      "url": "https://lod.lu/artikel/ORDONNANCE1",
+      "audio": {
+        "aac": "https://lod.lu/uploads/AAC/ordonnance1.m4a",
+        "ogg": "https://lod.lu/uploads/OGG/ordonnance1.ogg"
+      },
+      "verifiedBy": "LOD open data (260727)",
+      "verifiedAt": "2026-09-24"
+    },
+    "article": "d'",
+    "plural": "Ordonnancen"
   }
 ]

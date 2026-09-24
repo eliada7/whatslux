@@ -28,8 +28,13 @@ export interface VocabularyEntry {
 
 export interface LodVerification {
   verified: boolean
+  /** LOD article id, e.g. "DOKTER1" — the link between this word and the dictionary */
+  entryId?: string
+  /** Pronunciation audio from lod.lu */
+  audio?: { aac: string; ogg: string }
   /** Direct link to the LOD entry once verified. */
   url?: string
+  /** A person's name, or "LOD open data (<release>)" when checked against the dataset */
   verifiedBy?: string
   /** ISO date */
   verifiedAt?: string

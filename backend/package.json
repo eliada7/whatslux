@@ -14,7 +14,8 @@
     "@whatslux/ai": "workspace:*",
     "@whatslux/shared": "workspace:*",
     "express": "^5.1.0",
-    "zod": "^4.1.0"
+    "zod": "^4.1.0",
+    "@whatslux/lod": "workspace:*"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

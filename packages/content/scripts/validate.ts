@@ -7,7 +7,8 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { isPublishable, type Lesson, type VocabularyEntry } from '@whatslux/shared'
-import { detectGermanInLuxembourgish } from '@whatslux/ai'
+import { GERMAN_ONLY_FORMS, detectGermanInLuxembourgish } from '@whatslux/ai'
+import { LodIndex } from '@whatslux/lod'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const errors: string[] = []
@@ -50,6 +51,33 @@ for (const level of ['a1', 'a2', 'b1']) {
       else if (lesson.review.lodVerified && !isPublishable(v)) errors.push(`${file}: marked verified but uses unverified word ${id}`)
     }
   }
+}
+
+// ── Checks against the imported LOD dataset (skipped when not imported) ──
+if (LodIndex.exists()) {
+  const lod = await LodIndex.load()
+  for (const v of vocab.values()) {
+    if (!v.lod.entryId) continue
+    const e = lod.byId(v.lod.entryId)
+    if (!e) errors.push(`${v.id}: LOD entry ${v.lod.entryId} does not exist`)
+    else if (e.lemma !== v.word) errors.push(`${v.id}: "${v.word}" does not match LOD lemma "${e.lemma}"`)
+  }
+  // Every Luxembourgish form LOD knows (lemmas, plurals, participles, example words)
+  const luForms = new Set<string>()
+  for (const e of lod.all()) {
+    luForms.add(e.lemma)
+    e.plural?.forEach((p) => luForms.add(p.form))
+    e.pastParticiple?.forEach((p) => luForms.add(p))
+    for (const m of e.meanings) for (const ex of m.examples) for (const w of ex.text.split(/[\s']+/)) luForms.add(w.replace(/[^\p{L}-]/gu, ''))
+  }
+  const lower = new Set([...luForms].map((f) => f.toLowerCase()))
+  for (const f of GERMAN_ONLY_FORMS) {
+    const clash = f.caseSensitive ? luForms.has(f.de) : lower.has(f.de.toLowerCase())
+    if (clash) errors.push(`German detector: "${f.de}" is a valid Luxembourgish form in LOD — remove it from GERMAN_ONLY_FORMS`)
+  }
+  console.log(`LOD: checked against ${lod.size} entries (${lod.meta?.source ?? 'unknown release'})`)
+} else {
+  console.log('LOD: dataset not imported — run `pnpm lod:import <zip>` for full checks')
 }
 
 console.log(`Vocabulary: ${vocab.size} entries, ${vocab.size - pending.length} LOD-verified`)
