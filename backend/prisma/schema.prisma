@@ -1,0 +1,441 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  name                String
+  avatarUrl           String?
+  uiLanguage          UILanguage @default(ENGLISH)
+  currentLevel        CEFRLevel  @default(A1)
+  targetLevel         CEFRLevel  @default(A2)
+  primaryGoal         LearningGoal @default(SPROOCHENTEST)
+  targetExamDate      DateTime?
+  dailyGoalMinutes    Int        @default(15)
+  subscriptionStatus  SubscriptionStatus @default(FREE)
+  subscriptionPlan    SubscriptionPlan?
+  subscriptionEndsAt  DateTime?
+  stripeCustomerId    String?    @unique
+  stripePriceId       String?
+  currentStreak       Int        @default(0)
+  longestStreak       Int        @default(0)
+  lastStudiedAt       DateTime?
+  totalXP             Int        @default(0)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  progress            UserProgress[]
+  vocabularyProgress  VocabularyProgress[]
+  speakingRecordings  SpeakingRecording[]
+  examSimulations     ExamSimulation[]
+  studySessions       StudySession[]
+  communityPosts      CommunityPost[]
+  communityCorrections CommunityCorrection[]
+  notifications       Notification[]
+  achievements        UserAchievement[]
+}
+
+model Lesson {
+  id                  String    @id @default(cuid())
+  slug                String    @unique
+  titles              Json      // { ar, fr, ru, en, pt }
+  descriptions        Json      // { ar, fr, ru, en, pt }
+  titleLu             String    // Luxembourgish title (shown to all)
+  level               CEFRLevel
+  category            LessonCategory
+  order               Int
+  estimatedMinutes    Int       @default(15)
+  isPremium           Boolean   @default(false)
+  isPublished         Boolean   @default(true)
+  lodVerified         Boolean   @default(false)  // Was content verified on LOD?
+  lastVerifiedAt      DateTime?
+  verifiedBy          String?   // Name of human reviewer
+  completionCount     Int       @default(0)
+  averageScore        Float?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  sections            LessonSection[]
+  exercises           Exercise[]
+  vocabulary          LessonVocabulary[]
+  progress            UserProgress[]
+}
+
+model LessonSection {
+  id                  String       @id @default(cuid())
+  lessonId            String
+  type                SectionType
+  order               Int
+  contentJson         Json         // Multilingual content
+
+  lesson              Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+model VocabularyItem {
+  id                  String    @id @default(cuid())
+  word                String    // Luxembourgish word (LOD-verified)
+  article             String?   // den / d' / eng
+  plural              String?
+  verbForms           Json?     // { present, past, participle }
+  translations        Json      // { ar, fr, ru, en, pt }
+  exampleLu           String?
+  exampleTranslations Json?
+  audioUrl            String?   // ElevenLabs TTS audio
+
+  // LOD Verification (MANDATORY)
+  lodVerified         Boolean   @default(false)
+  lodUrl              String?   // Direct link to LOD entry
+  lodEntry            String?   // LOD entry ID
+  lastVerifiedAt      DateTime?
+  verifiedBy          String?   // Human reviewer who checked the entry on lod.lu
+  reviewNote          String?
+
+  category            VocabularyCategory
+  level               CEFRLevel
+  frequency           Int       @default(1)
+  tags                String[]
+
+  lessons             LessonVocabulary[]
+  userProgress        VocabularyProgress[]
+
+  @@index([category, level])
+  @@index([word])
+}
+
+model LessonVocabulary {
+  lessonId            String
+  vocabularyId        String
+  order               Int
+
+  lesson              Lesson          @relation(fields: [lessonId], references: [id])
+  vocabulary          VocabularyItem  @relation(fields: [vocabularyId], references: [id])
+
+  @@id([lessonId, vocabularyId])
+}
+
+// SM-2 Spaced Repetition per user per word
+model VocabularyProgress {
+  id                  String    @id @default(cuid())
+  userId              String
+  vocabularyId        String
+  easeFactor          Float     @default(2.5)
+  interval            Int       @default(0)
+  repetitions         Int       @default(0)
+  nextReviewAt        DateTime  @default(now())
+  correctCount        Int       @default(0)
+  incorrectCount      Int       @default(0)
+  lastReviewedAt      DateTime?
+
+  user                User           @relation(fields: [userId], references: [id])
+  vocabulary          VocabularyItem @relation(fields: [vocabularyId], references: [id])
+
+  @@unique([userId, vocabularyId])
+}
+
+model Exercise {
+  id                  String        @id @default(cuid())
+  lessonId            String
+  type                ExerciseType
+  order               Int
+  questions           Json          // { ar, fr, ru, en, pt }
+  contentLu           String?       // Luxembourgish text (preserved exactly)
+  correctAnswer       String
+  options             Json?
+  blanks              Json?
+  hints               Json?         // { ar, fr, ru, en, pt }
+  explanations        Json?         // { ar, fr, ru, en, pt }
+  difficulty          Int           @default(1)
+  lodVerified         Boolean       @default(false)
+
+  lesson              Lesson        @relation(fields: [lessonId], references: [id])
+}
+
+model UserProgress {
+  id                  String    @id @default(cuid())
+  userId              String
+  lessonId            String
+  status              ProgressStatus @default(NOT_STARTED)
+  score               Int?
+  attempts            Int            @default(0)
+  startedAt           DateTime?
+  completedAt         DateTime?
+  lastAccessedAt      DateTime?
+
+  user                User      @relation(fields: [userId], references: [id])
+  lesson              Lesson    @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, lessonId])
+}
+
+model StudySession {
+  id                  String    @id @default(cuid())
+  userId              String
+  startedAt           DateTime  @default(now())
+  endedAt             DateTime?
+  durationMinutes     Int?
+  xpEarned            Int       @default(0)
+  lessonsCompleted    Int       @default(0)
+  wordsReviewed       Int       @default(0)
+  speakingExercises   Int       @default(0)
+
+  user                User      @relation(fields: [userId], references: [id])
+}
+
+model SpeakingRecording {
+  id                  String         @id @default(cuid())
+  userId              String
+  exerciseType        SpeakingType
+  prompt              String         // Luxembourgish prompt
+  promptTranslation   String?
+  audioUrl            String
+  durationSeconds     Int?
+  transcription       String?
+  processingStatus    ProcessingStatus @default(PENDING)
+  aiFeedbackJson      Json?
+  overallScore        Int?
+  submittedToCommunity Boolean       @default(false)
+  createdAt           DateTime       @default(now())
+
+  user                User           @relation(fields: [userId], references: [id])
+  communityCorrections CommunityCorrection[]
+  communityPosts      CommunityPost[]
+}
+
+model ExamSimulation {
+  id                  String    @id @default(cuid())
+  userId              String
+  examType            ExamType
+  mode                ExamMode  @default(PRACTICE)
+  questionsJson       Json
+  answersJson         Json?
+  overallScore        Int?
+  speakingScore       Int?
+  fluencyScore        Int?
+  vocabularyScore     Int?
+  grammarScore        Int?
+  passStatus          Boolean?
+  readyForExam        Boolean?
+  aiFeedbackJson      Json?
+  studyPlanJson       Json?
+  startedAt           DateTime  @default(now())
+  completedAt         DateTime?
+
+  user                User      @relation(fields: [userId], references: [id])
+}
+
+model CommunityPost {
+  id                  String    @id @default(cuid())
+  userId              String
+  recordingId         String?
+  contentLu           String
+  contextDescription  String?
+  createdAt           DateTime  @default(now())
+
+  user                User      @relation(fields: [userId], references: [id])
+  recording           SpeakingRecording? @relation(fields: [recordingId], references: [id])
+  corrections         CommunityCorrection[]
+}
+
+model CommunityCorrection {
+  id                  String    @id @default(cuid())
+  postId              String?
+  recordingId         String?
+  correctorId         String
+  originalText        String
+  correctedText       String
+  explanation         String?
+  helpfulCount        Int       @default(0)
+  createdAt           DateTime  @default(now())
+
+  post                CommunityPost?     @relation(fields: [postId], references: [id])
+  recording           SpeakingRecording? @relation(fields: [recordingId], references: [id])
+  corrector           User               @relation(fields: [correctorId], references: [id])
+}
+
+model Achievement {
+  id                  String    @id @default(cuid())
+  slug                String    @unique
+  names               Json
+  descriptions        Json
+  iconUrl             String
+  xpReward            Int
+  condition           Json
+
+  userAchievements    UserAchievement[]
+}
+
+model UserAchievement {
+  userId              String
+  achievementId       String
+  earnedAt            DateTime  @default(now())
+
+  user                User        @relation(fields: [userId], references: [id])
+  achievement         Achievement @relation(fields: [achievementId], references: [id])
+
+  @@id([userId, achievementId])
+}
+
+model Notification {
+  id                  String    @id @default(cuid())
+  userId              String
+  type                NotificationType
+  titleJson           Json
+  bodyJson            Json
+  data                Json?
+  read                Boolean   @default(false)
+  sentAt              DateTime  @default(now())
+
+  user                User      @relation(fields: [userId], references: [id])
+}
+
+// ─── ENUMS ───────────────────────────────────────────────────────────────────
+
+enum UILanguage {
+  ARABIC
+  FRENCH
+  RUSSIAN
+  ENGLISH
+  PORTUGUESE
+}
+
+enum CEFRLevel {
+  A1
+  A2
+  B1
+  B2
+}
+
+enum LearningGoal {
+  SPROOCHENTEST
+  WORK
+  INTEGRATION
+  CITIZENSHIP
+  GENERAL
+}
+
+enum LessonCategory {
+  PRONUNCIATION
+  GRAMMAR
+  VOCABULARY
+  CONVERSATION
+  CULTURE
+  EXAM_PREP
+  INTEGRATION_WORK
+  INTEGRATION_HEALTH
+  INTEGRATION_ADMIN
+  INTEGRATION_HOUSING
+  INTEGRATION_SCHOOL
+}
+
+enum SectionType {
+  LEARNING_OBJECTIVES
+  GRAMMAR_RULE
+  VOCABULARY_TABLE
+  EXAMPLES
+  COMMON_ERRORS
+  MEMORY_TRICK
+  NATIVE_LANGUAGE_NOTE   // Specific note per UI language group
+  LU_VS_DE_WARNING       // Luxembourgish vs German confusion warning
+  EXAM_TIP
+  CULTURE_NOTE
+  QUICK_REVIEW
+}
+
+enum ExerciseType {
+  FILL_BLANK
+  MULTIPLE_CHOICE
+  WORD_ORDER
+  TRUE_FALSE
+  TRANSLATE_TO_LU
+  TRANSLATE_FROM_LU
+  SPEAKING
+  LISTEN_SELECT
+  MATCH_PAIRS
+  LU_VS_DE_IDENTIFY      // "Is this Luxembourgish or German?" exercise
+}
+
+enum SpeakingType {
+  FREE_SPEECH
+  PICTURE_DESCRIPTION
+  ROLE_PLAY
+  EXAM_QUESTION
+  VOCABULARY_PRACTICE
+}
+
+enum ExamType {
+  SPEAKING_A2
+  LISTENING_B1
+  FULL_SPROOCHENTEST
+}
+
+enum ExamMode {
+  PRACTICE
+  OFFICIAL_SIMULATION
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  NEEDS_REVIEW
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum SubscriptionStatus {
+  FREE
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+}
+
+enum SubscriptionPlan {
+  MONTHLY
+  YEARLY
+  LIFETIME
+}
+
+enum VocabularyCategory {
+  CORE
+  WORK
+  HEALTHCARE
+  ADMINISTRATION
+  HOUSING
+  TRANSPORT
+  FAMILY
+  FOOD
+  SHOPPING
+  TIME
+  WEATHER
+  NUMBERS
+  EMOTIONS
+  EDUCATION
+  TECHNOLOGY
+  CULTURE
+}
+
+enum NotificationType {
+  DAILY_REMINDER
+  STREAK_AT_RISK
+  STREAK_MILESTONE
+  REVIEW_READY
+  EXAM_REMINDER
+  ACHIEVEMENT_EARNED
+  COMMUNITY_CORRECTION
+  WEEKLY_REPORT
+}

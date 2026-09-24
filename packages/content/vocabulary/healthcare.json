@@ -1,0 +1,30 @@
+[
+  {
+    "id": "health-cns",
+    "word": "CNS",
+    "article": "d'",
+    "translations": { "ar": "صندوق التأمين الصحي الوطني", "en": "national health insurance fund" },
+    "category": "HEALTHCARE",
+    "level": "A2",
+    "lod": { "verified": false }
+  },
+  {
+    "id": "health-dokter",
+    "word": "Dokter",
+    "article": "den",
+    "translations": { "ar": "الطبيب", "en": "doctor" },
+    "category": "HEALTHCARE",
+    "level": "A1",
+    "lod": { "verified": false },
+    "reviewNote": "Spec listed 'de Médecin'. Dokter is the everyday word — confirm both on LOD."
+  },
+  {
+    "id": "health-ordonnance",
+    "word": "Ordonnance",
+    "article": "d'",
+    "translations": { "ar": "الوصفة الطبية", "en": "prescription" },
+    "category": "HEALTHCARE",
+    "level": "A2",
+    "lod": { "verified": false }
+  }
+]

@@ -1,0 +1,60 @@
+[
+  {
+    "id": "work-adem",
+    "word": "ADEM",
+    "article": "d'",
+    "translations": { "ar": "وكالة التشغيل الوطنية", "en": "national employment agency" },
+    "category": "WORK",
+    "level": "A2",
+    "lod": { "verified": false },
+    "reviewNote": "Acronym — check whether LOD lists it and which article is used."
+  },
+  {
+    "id": "work-chomage",
+    "word": "Chômage",
+    "article": "de",
+    "translations": { "ar": "البطالة / إعانة البطالة", "en": "unemployment (benefit)" },
+    "category": "WORK",
+    "level": "A2",
+    "lod": { "verified": false }
+  },
+  {
+    "id": "work-contrat",
+    "word": "Contrat",
+    "article": "de",
+    "translations": { "ar": "العقد", "en": "contract" },
+    "category": "WORK",
+    "level": "A2",
+    "lod": { "verified": false }
+  },
+  {
+    "id": "work-salaire",
+    "word": "Salaire",
+    "article": "de",
+    "translations": { "ar": "الراتب", "en": "salary" },
+    "category": "WORK",
+    "level": "A2",
+    "lod": { "verified": false },
+    "reviewNote": "Check whether Pai / Loun should be taught alongside or instead."
+  },
+  {
+    "id": "work-interview",
+    "word": "Intervue",
+    "article": "d'",
+    "translations": { "ar": "المقابلة الوظيفية", "en": "job interview" },
+    "category": "WORK",
+    "level": "A2",
+    "lod": { "verified": false },
+    "reviewNote": "Spelling and article from the spec are doubtful — confirm the standard word for 'job interview' on LOD."
+  },
+  {
+    "id": "work-urlaub",
+    "word": "Urlaub",
+    "article": "den",
+    "translations": { "ar": "الإجازة السنوية", "en": "annual leave" },
+    "category": "WORK",
+    "level": "A2",
+    "lod": { "verified": false },
+    "reviewNote": "Looks German. Check whether Congé / Vakanz is the word to teach."
+  }
+]

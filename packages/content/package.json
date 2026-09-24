@@ -1,0 +1,12 @@
+{
+  "name": "@whatslux/content",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "tsx scripts/validate.ts",
+    "test": "tsx scripts/validate.ts"
+  },
+  "dependencies": { "@whatslux/shared": "workspace:*", "@whatslux/ai": "workspace:*" },
+  "devDependencies": { "tsx": "^4.20.0", "typescript": "^5.8.0", "@types/node": "^22.0.0" }
+}
