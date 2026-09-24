@@ -1,4 +1,4 @@
-import { Deck } from '@/components/Deck'
+import { Hub } from '@/components/Hub'
 import { getVocabulary } from '@/lib/api'
 import { t } from '@/lib/i18n'
 
@@ -15,10 +15,10 @@ export default async function VocabularyPage() {
             {t.greeting}
           </bdi>
         </p>
-        <h1>{t.title}</h1>
+        <h1>{t.hubTitle}</h1>
         <p className="subtitle">{t.subtitle}</p>
       </header>
-      {entries ? <Deck entries={entries} /> : <p className="empty">{t.apiDown}</p>}
+      {entries ? <Hub entries={entries} /> : <p className="empty">{t.apiDown}</p>}
     </main>
   )
 }

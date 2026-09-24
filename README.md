@@ -15,7 +15,7 @@ with a strong focus on Sproochentest preparation and on **never mixing Luxembour
 | Content + publishing gate | `packages/content` | ✅ validator checks against LOD; 7/9 seed words verified |
 | REST API (Express) | `backend` | ✅ vocabulary, SRS, LOD link, AI routes + tests |
 | Database schema (Prisma) | `backend/prisma/schema.prisma` | ✅ valid, not yet migrated |
-| Learner web app (Next.js): vocabulary flashcards with LOD audio, SM-2 review, RTL Arabic | `apps/web` | ✅ `/vocabulary` |
+| Learner web app (Next.js, RTL Arabic), Busuu-style method: present → practise → Smart Review | `apps/web` | ✅ `/vocabulary` · `/learn` · `/review` |
 | Mobile app (Expo), auth, payments, speech-to-text | — | ⏳ next phases |
 
 ## Content integrity rules (enforced in code)
@@ -39,10 +39,17 @@ pnpm --filter @whatslux/web dev       # app on :3000 → /vocabulary
 ```
 
 <p>
-  <img src="docs/screenshots/1-card-front.png" width="200" alt="Card front">
-  <img src="docs/screenshots/2-card-back-den.png" width="200" alt="Card back">
-  <img src="docs/screenshots/5-dark-mode.png" width="200" alt="Dark mode">
+  <img src="docs/screenshots/1-home.png" width="180" alt="Home">
+  <img src="docs/screenshots/2-new-word.png" width="180" alt="New word">
+  <img src="docs/screenshots/5-article.png" width="180" alt="Article exercise">
+  <img src="docs/screenshots/4-wrong-feedback.png" width="180" alt="Feedback">
 </p>
+
+### Learning method (Busuu-style)
+
+1. **Present**: each new word with official LOD audio, meaning, plural, the n-rule on the word itself, and a recorded example.
+2. **Practise**: exercises generated only from verified data: meaning (LU → AR), listening (audio → LU), article (den / de / d'), matching. Instant feedback; a missed question comes back at the end.
+3. **Smart Review**: word strength (weak / medium / strong) comes from the answers, not self-rating, and feeds SM-2. Weak and due words come first.
 
 ## API (so far)
 
